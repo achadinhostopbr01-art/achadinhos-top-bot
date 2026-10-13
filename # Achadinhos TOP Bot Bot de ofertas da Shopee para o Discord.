@@ -1,0 +1,34 @@
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
+});
+
+const CANAL_ID = "1557106593206636576";
+
+const PRODUTOS = [
+  { nome: "Fone Bluetooth TWS", preco: "R$ 29,90", link: "https://shopee.com.br/SEU_LINK_AQUI", img: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lz8a8x9x8x9x8x" },
+  { nome: "Smartwatch Ultra", preco: "R$ 89,90", link: "https://shopee.com.br/SEU_LINK_AQUI", img: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lz8a8x9x8x9x8x" },
+  { nome: "Kit 3 Camisetas", preco: "R$ 49,90", link: "https://shopee.com.br/SEU_LINK_AQUI", img: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lz8a8x9x8x9x8x" }
+];
+
+client.once('ready', async () => {
+  console.log(`Logado como ${client.user.tag}`);
+  const canal = await client.channels.fetch(CANAL_ID);
+
+  setInterval(async () => {
+    const produto = PRODUTOS[Math.floor(Math.random() * PRODUTOS.length)];
+    const embed = new EmbedBuilder()
+     .setTitle(`🔥 ${produto.nome}`)
+     .setDescription(`**${produto.preco}**\n[👉 CLIQUE AQUI PARA COMPRAR](${produto.link})`)
+     .setColor(0xFF6B00)
+     .setImage(produto.img)
+     .setFooter({ text: "Achadinhos TOP - VELLORA | Link afiliado" })
+     .setTimestamp();
+
+    await canal.send({ embeds: [embed] });
+    console.log("Oferta enviada!");
+  }, 1000 * 60 * 60 * 2); // envia a cada 2 horas
+});
+
+client.login(process.env.TOKEN);
